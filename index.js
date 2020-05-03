@@ -12,6 +12,7 @@ bot.on('message', message =>{
     if (!message.content.startsWith(PREFIX)) return;
     const args = message.content.trim().split(/ +/g);
 	const cmd = args[0].slice(PREFIX.length).toLowerCase();
+	if (isNaN(message.content)){message.delete()};
 	
     const exampleEmbed = new Discord.MessageEmbed()
 	.setColor('#ED6428')
