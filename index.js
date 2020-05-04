@@ -2,13 +2,17 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 const { PREFIX , TOKEN} = require('./config');
 
+
+
 bot.on('ready' , message => {
     console.log("I'm Ready !");
 
-    bot.user.setActivity("Surveille les petits 1G3");
+    bot.user.setActivity("Surveille les ptits 1G3");
 });
 
-bot.on('message', message =>{
+bot.on('message',message =>{
+
+
     if (!message.content.startsWith(PREFIX)) return;
     const args = message.content.trim().split(/ +/g);
 	const cmd = args[0].slice(PREFIX.length).toLowerCase();
@@ -26,21 +30,21 @@ bot.on('message', message =>{
 		{ name: 'Élèves concernés : ', value: args[4] },
 		{ name: 'Date & Heure : ', value: "Le " + args[6] + " à partir de " + args[5] },
 		{ name: 'Durée : ', value: args[7] + "h" },
-		{ name: 'Lien du Cours :', value: args[8], inline: true },
-	)
-	.setImage('https://i.imgur.com/LVBYm3z.jpg')
-	.setTimestamp();
-	
-	
+		{ name: 'Lien du Cours :', value: args[8], inline: true },)
+	.setImage('https://i.imgur.com/2P4mz7P.jpg')
+	.setTimestamp(new Date())
+	.setFooter("N'hésite pas à dire si tu seras présent ou non \nPrésent : ✅ || Absent :❌","https://i.imgur.com/1jpGDRw.jpg");
 
      if (cmd === 'create') {      
 		if ((args[1] === "cours") && (args[2] !== undefined) && (args[3] !== undefined)
 		&& (args[4] !== undefined)&& (args[5] !== undefined)&& (args[6] !== undefined)
 		&& (args[7] !== undefined)&& (args[8] !== undefined)){
-		{message.channel.send(exampleEmbed)}}
-		
-		else 
-		message.channel.send("Respectez la syntaxe")}
+		{message.channel.send(exampleEmbed).then(function(message){
+				message.react('✅')
+				message.react("❌")});}
+		}	
+		else{ 
+		message.channel.send("Respectez la syntaxe")}}
 	
 	else if (cmd === 'liens') {      
 		message.channel.send({embed:{
