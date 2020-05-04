@@ -41,7 +41,42 @@ bot.on('message', message =>{
 		
 		else 
 		message.channel.send("Respectez la syntaxe")}
-		
+	
+	if (cmd === 'liens') {      
+		message.channel.send({embed:{
+			color:'#ba9704',
+			
+			title : 'Voici les différents liens des cours :',
+			url :"https://www.instagram.com/a_mbch/",
+			description:"Si il manque des liens, dites le moi !",
+			fields:[{
+						name : 'Français avec Mr SURRIN',
+						value : "Discord : " + "https://discord.gg/ZcWfGcZ"},
+					{
+						name : 'Spé Physique Chimie avec Mme BURGY',
+						value : "Bb Collaborate : " + "https://eu.bbcollab.com/collab/ui/session/guest/0d8883832f0347289d3bdb928b3e6259"},
+					{
+						name : 'Physique Chimie (Tronc Commun) avec Mr HELLER',
+						value : "Framateam : " + "https://framateam.org/signup_user_complete/?id=hcyryw5ucb8i5jd67zk5k7sowr",	
+					}
+					],
+			timestamp : new Date(),
+			footer:{
+				icon_url:"https://i.imgur.com/1jpGDRw.jpg",
+				url:"https://www.instagram.com/a_mbch/",
+				text:"Crée par Andrew M"
+			}}})}
+	
+	
+	if (cmd === 'clear'){
+		if (!message.member.hasPermission('MANAGE_MESSAGES')) return message.channel.send("Désoler , vous n'avez pas la permission !")
+		let count = args[1]
+		if(!count)return message.channel.send("Veuillez indiquez un nombre de messages à suprimmer")
+		if (isNaN(count)) return message.channel.send("Indiquez un nombre valide !")
+		if (count < 1 || count > 99) return message.channel.send("Indiquez un chiffre en 1 et 99 !")
+		message.channel.bulkDelete(parseInt(count) + 1)
+	}	
+
 	else if (cmd === 'help'){
 		message.channel.send({embed:{
 			color:'#ba9704',
@@ -54,6 +89,9 @@ bot.on('message', message =>{
 				value : "Cette commande permet d'indiquer aux élèves concernés, la programmation d'un cours."+ "\nPour utiliser cette commande, je vous propose un exemple" + 
 				" \n!create cours @MonsieurSurrin @élèves 15h30 02/05 2 https://google.fr"+
 				"\nDonc on annonce ici , un cours de Français à touts les élèves le 02/05 à 15h30 pour une durée de 2h"
+				},{
+				name : '!liens',
+				value : "Cette commande permet d'afficher tous les liens des cours des différentes matières"
 				}],
 			timestamp : new Date(),
 			footer:{
