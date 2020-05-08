@@ -1,5 +1,8 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
+const fs = require ('fs');
+bot.commands = new Discord.Collection();
+bot.aliases = new Discord.Collection();bot.commands = new Discord.Collection();
 const { PREFIX , TOKEN} = require('./config');
 
 
@@ -10,107 +13,68 @@ bot.on('ready' , message => {
     bot.user.setActivity("Surveille les ptits 1G3");
 });
 
+const init = async()=>{
+	fs.readdir(`./commands`,(err,files) => {
+		if(err) return console.error(err);
+		files.forEach(file =>{
+			const props = require (`./commands/${file}`);
+			bot.commands.set(props.name , props);
+			props.aliases.forEach(alias => bot.aliases.set(alias, props.name));
+			console.log(`Loaded ${file}`);
+
+		})
+	})
+}
+init()
+
 bot.on('message',message =>{
 
 
     if (!message.content.startsWith(PREFIX)) return;
-    const args = message.content.trim().split(/ +/g);
-	const cmd = args[0].slice(PREFIX.length).toLowerCase();
+	const args = message.content.slice(PREFIX.length).split(" ");
+	const command = args.shift().toLowerCase();
+	const cmd = bot.commands.get(command) || bot.commands.get(bot.aliases.get(command)) ;
+	if (cmd) cmd.run(bot, message,args);
 	if (isNaN(message.content)){message.delete()};
 	
-    const exampleEmbed = new Discord.MessageEmbed()
-	.setColor('#ED6428')
-	.setTitle('Cours Annoncé : ' + args[2])		
-	.setAuthor('El Professor', 'https://i.imgur.com/xcjWYXF.jpg')
-	.setDescription('Un cours viens d\'être annoncé !')
-	.setThumbnail('https://i.imgur.com/xcjWYXF.jpg')
-	.addFields(
-		{ name: 'Crée par :', value: message.author },
-		{ name: 'Professeur : ', value: args[3] },
-		{ name: 'Élèves concernés : ', value: args[4] },
-		{ name: 'Date & Heure : ', value: "Le " + args[6] + " à partir de " + args[5] },
-		{ name: 'Durée : ', value: args[7] + "h" },
-		{ name: 'Lien du Cours :', value: args[8], inline: true },)
-	.setImage('https://i.imgur.com/2P4mz7P.jpg')
-	.setTimestamp(new Date())
-	.setFooter("N'hésite pas à dire si tu seras présent ou non \nPrésent : ✅ || Absent :❌","https://i.imgur.com/1jpGDRw.jpg");
-
-     if (cmd === 'create') {      
-		if ((args[1] === "cours") && (args[2] !== undefined) && (args[3] !== undefined)
-		&& (args[4] !== undefined)&& (args[5] !== undefined)&& (args[6] !== undefined)
-		&& (args[7] !== undefined)&& (args[8] !== undefined)){
-		{message.channel.send(exampleEmbed).then(function(message){
-				message.react('✅')
-				message.react("❌")});}
-		}	
-		else{ 
-		message.channel.send("Respectez la syntaxe")}}
-	
-	else if (cmd === 'liens') {      
-		message.channel.send({embed:{
-			color:'#ba9704',
-			
-			title : 'Voici les différents liens des cours :',
-			url :"https://www.instagram.com/a_mbch/",
-			description:"Si il manque des liens, dites le moi !",
-			fields:[{
-						name : 'Français avec Mr SURRIN',
-						value : "Discord : " + "https://discord.gg/ZcWfGcZ"},
-					{
-						name : 'Spé Physique Chimie avec Mme BURGY',
-						value : "Bb Collaborate : " + "https://eu.bbcollab.com/collab/ui/session/guest/0d8883832f0347289d3bdb928b3e6259"},
-					{
-						name : 'Physique Chimie (Tronc Commun) avec Mr HELLER',
-						value : "Framateam : " + "https://framateam.org/signup_user_complete/?id=hcyryw5ucb8i5jd67zk5k7sowr"},
-					],
-			timestamp : new Date(),
-			footer:{
-				icon_url:"https://i.imgur.com/1jpGDRw.jpg",
-				url:"https://www.instagram.com/a_mbch/",
-				text:"Crée par Andrew M"}
-		}})}
-	
-	
-	else if (cmd === 'clear'){
-		if (!message.member.hasPermission('MANAGE_MESSAGES')) {message.channel.send("Désolé, vous n'avez pas la permission !")}
-		let count = args[1]
-		if(!count)return message.channel.send("Veuillez indiquez un nombre de messages à suprimmer")
-		if (isNaN(count)) return message.channel.send("Indiquez un nombre valide !")
-		if (count < 1 || count > 99) return message.channel.send("Indiquez un chiffre en 1 et 99 !")
-		message.channel.bulkDelete(parseInt(count))
-	}	
-
-	else if (cmd === 'help'){
-		message.channel.send({embed:{
-			color:'#ba9704',
-			
-			title : 'Voici les différentes commandes :',
-			url :"https://www.instagram.com/a_mbch/",
-			description:"Pour l'instant, il'y a très peu de commandes, n'hésitez pas à me donner des idées",
-			fields:[{
-				name : '!create cours <matière> <professeur> <élèves concernés(@role)> <heure> <date> <durée> <lien du cours>',
-				value : "Cette commande permet d'indiquer aux élèves concernés, la programmation d'un cours."+ "\nPour utiliser cette commande, je vous propose un exemple :" + 
-				" \n!create cours @MonsieurSurrin @élèves 15h30 02/05 2 https://google.fr"+
-				"\nDonc on annonce ici , un cours de Français à touts les élèves le 02/05 à 15h30 pour une durée de 2h."
-				},{
-				name : '!liens',
-				value : "Cette commande permet d'afficher tous les liens des cours des différentes matières."
-				},{
-					name : '!clear <nbr>',
-					value : "Cette commande permet de supprimer un certains nombre de messages."
-					}],
-			timestamp : new Date(),
-			footer:{
-				icon_url:"https://i.imgur.com/1jpGDRw.jpg",
-				url:"https://www.instagram.com/a_mbch/",
-				text:"Crée par Andrew M"
-			}}})}
-	
-	else{
-		message.channel.send('Erreur ! Faites !help pour voir les commandes !')
-	}
 	
 }),   
+
+bot.on("messageReactionAdd",(messageReaction,user) =>{
+	
+	const message = messageReaction.message;
+	const member = message.guild.members.cache.get(user.id);
+	if(user.bot)return;
+	if (messageReaction.message.channel.id ="707604887688445992");
+	const newrole1 = message.guild.roles.cache.find((role) => role.name ==="Présent")
+	const newrole2 = message.guild.roles.cache.find((role) => role.name ==="Absent")
+
+	if (messageReaction.emoji.name === '✅'){
+		member.roles.add(newrole1.id);
+		member.createDM().then((channel) =>{
+			channel.send("Tu es noté **présent** pours le cours ! \n Si tu souhaite connaître les camarades présent au cours, n'hésite pas à faire !present. Et inversement pour voir ceux qui ne seront pas présent avec !absent" )
+		})}
+	else if (messageReaction.emoji.name === '❌'){
+		member.roles.add(newrole2.id);
+		member.createDM().then((channel) =>{
+			channel.send("Tu es noté **absent** pours le cours ! \n Si tu souhaite connaître les camarades présent au cours, n'hésite pas à faire !present. Et inversement pour voir ceux qui ne seront pas présent avec !absent" )
+			
+})}}),
+
+bot.on("messageReactionRemove",(messageReaction,user) => {const message = messageReaction.message;
+	const member = message.guild.members.cache.get(user.id);
+	if(user.bot)return;
+	if (messageReaction.message.channel.id ="707604887688445992");
+	const newrole1 = message.guild.roles.cache.find((role) => role.name ==="Présent")
+	const newrole2 = message.guild.roles.cache.find((role) => role.name ==="Absent")
+
+	if (messageReaction.emoji.name === '✅'){
+		member.roles.remove(newrole1.id)
+	}
+	else if(messageReaction.emoji.name === '❌'){
+		member.roles.remove(newrole2.id);}
+
+})
 
        
 bot.login(TOKEN)
