@@ -11,13 +11,13 @@ module.exports = {
 			description:"Si il manque des liens, dites le moi !",
 			fields:[{
 						name : 'Français avec Mr SURRIN',
-						value : "Discord : " + "https://discord.gg/ZcWfGcZ"},
+						value : "Discord : "Lien"},
 					{
 						name : 'Spé Physique Chimie avec Mme BURGY',
-						value : "Bb Collaborate : " + "https://eu.bbcollab.com/collab/ui/session/guest/0d8883832f0347289d3bdb928b3e6259"},
+						value : "Bb Collaborate : " + "Lien"},
 					{
 						name : 'Physique Chimie (Tronc Commun) avec Mr HELLER',
-						value : "Framateam : " + "https://framateam.org/signup_user_complete/?id=hcyryw5ucb8i5jd67zk5k7sowr"},
+						value : "Framateam : " + "Lien"},
 					],
 			timestamp : new Date(),
 			footer:{
