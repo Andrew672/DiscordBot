@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const bot = new Discord.Client();
 const fs = require ('fs');
 bot.commands = new Discord.Collection();
-bot.aliases = new Discord.Collection();bot.commands = new Discord.Collection();
+bot.aliases = new Discord.Collection();
 const { PREFIX , TOKEN} = require('./config');
 
 
@@ -29,7 +29,6 @@ init()
 
 bot.on('message',message =>{
 
-
     if (!message.content.startsWith(PREFIX)) return;
 	const args = message.content.slice(PREFIX.length).split(" ");
 	const command = args.shift().toLowerCase();
@@ -45,36 +44,37 @@ bot.on("messageReactionAdd",(messageReaction,user) =>{
 	const message = messageReaction.message;
 	const member = message.guild.members.cache.get(user.id);
 	if(user.bot)return;
-	if (messageReaction.message.channel.id ="707604887688445992");
 	const newrole1 = message.guild.roles.cache.find((role) => role.name ==="Présent")
 	const newrole2 = message.guild.roles.cache.find((role) => role.name ==="Absent")
+	if(messageReaction.message.channel.id !="707251561444933672"){}
 
-	if (messageReaction.emoji.name === '✅'){
+    else if (messageReaction.emoji.name === '✅'){
 		member.roles.add(newrole1.id);
 		member.createDM().then((channel) =>{
-			channel.send("Tu es noté **présent** pours le cours ! \n Si tu souhaite connaître les camarades présent au cours, n'hésite pas à faire !present. Et inversement pour voir ceux qui ne seront pas présent avec !absent" )
+			channel.send("Tu es noté **présent** pour le cours ! \n Si tu souhaite connaître les camarades présents au cours, n'hésite pas à faire !present. Et inversement pour voir ceux qui ne seront pas présent avec !absent" )
+        
 		})}
-	else if (messageReaction.emoji.name === '❌'){
+		else if (messageReaction.emoji.name === '❌'){
 		member.roles.add(newrole2.id);
 		member.createDM().then((channel) =>{
-			channel.send("Tu es noté **absent** pours le cours ! \n Si tu souhaite connaître les camarades présent au cours, n'hésite pas à faire !present. Et inversement pour voir ceux qui ne seront pas présent avec !absent" )
+			channel.send("Tu es noté **absent** pour le cours ! \n Si tu souhaite connaître les camarades présents au cours, n'hésite pas à faire !present. Et inversement pour voir ceux qui ne seront pas présent avec !absent" )
 			
-})}}),
+})}})
 
-bot.on("messageReactionRemove",(messageReaction,user) => {const message = messageReaction.message;
+bot.on("messageReactionRemove",(messageReaction,user) => {
+	const message = messageReaction.message;
 	const member = message.guild.members.cache.get(user.id);
 	if(user.bot)return;
-	if (messageReaction.message.channel.id ="707604887688445992");
 	const newrole1 = message.guild.roles.cache.find((role) => role.name ==="Présent")
 	const newrole2 = message.guild.roles.cache.find((role) => role.name ==="Absent")
+	if(messageReaction.message.channel.id !="707251561444933672"){}
 
-	if (messageReaction.emoji.name === '✅'){
-		member.roles.remove(newrole1.id)
+
+	else if (messageReaction.emoji.name === '✅'){
+	member.roles.remove(newrole1.id)
 	}
 	else if(messageReaction.emoji.name === '❌'){
-		member.roles.remove(newrole2.id);}
+		member.roles.remove(newrole2.id);}})
 
-})
-
-       
+		
 bot.login(TOKEN)

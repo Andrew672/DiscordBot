@@ -33,7 +33,8 @@ module.exports = {
             name : 'Absent',
             color:'WHITE'
             }})
-    {message.channel.send(exampleEmbed).then(function(message){
+    {    
+        message.channel.send(exampleEmbed).then(function(message){
 		message.react('✅')
         message.react("❌")})}}
 else{ 
