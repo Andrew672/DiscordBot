@@ -20,7 +20,7 @@ module.exports = {
 				},{
 				name : '!p ou !. ou !parole',
 				value : "Cette commande permet d'annoncer que vous voulez prendre la parole et posez des questions."
-				}
+				},
 				
 				{
 					name : '!clear <nbr>',
